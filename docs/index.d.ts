@@ -6,6 +6,7 @@ export default class Changebar implements LibraryInterface {
     element?: HTMLElement;
     constructor({ element, repo, file }: ChangebarConstructor);
     append(text: string): void;
+    updateStore(): void;
     generateCdnUrl(hash: string): string;
     fetchFileContents(url: string): Promise<{}>;
     fetchGitHubHash(): Promise<{}>;

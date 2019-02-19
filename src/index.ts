@@ -53,6 +53,10 @@ export default class Changebar implements LibraryInterface {
         placement: "bottom"
       });
     }
+    this.updateStore();
+  }
+  updateStore() {
+    // localStorage.setItem("nHeading", (<QueryList>document.querySelectorAll(".changebar *")).length);
   }
   generateCdnUrl(hash: string) {
     return `https://cdn.staticaly.com/gh/${this.repo}/${hash}/${this.file}`;
