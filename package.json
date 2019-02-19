@@ -1,6 +1,6 @@
 {
-  "name": "typestart",
-  "version": "1.0.0",
+  "name": "changebar",
+  "version": "0.9.0",
   "description": "Typescript DOM library starter template",
   "main": "docs/index.js",
   "module": "docs/index.js",
@@ -8,18 +8,18 @@
   "files": [
     "docs"
   ],
-  "repository": "git@github.com:AnandChowdhary/typestart.git",
+  "repository": "git@github.com:AnandChowdhary/changebar.git",
   "author": "Anand Chowdhary <anandchowdhary@gmail.com>",
   "license": "Unlicense",
   "scripts": {
     "start": "concurrently \"yarn watch\" \"yarn watch-docs\" \"yarn serve\" \"yarn prettier-watch\"",
     "build-docs": "tsc docs/demo.ts",
     "build": "webpack --config webpack.config.ts",
-    "watch": "onchange 'src/**/*.{js,jsx,ts,tsx,sass,css}' -- yarn build",
+    "watch": "onchange 'src/**/*.{js,jsx,ts,tsx,sass,scss,css}' -- yarn build",
     "watch-docs": "onchange 'docs/**/*.{html}' -- yarn build-docs",
     "serve": "cd docs && live-server && cd ../",
     "test": "jest --coverage --coverageReporters=text-lcov | coveralls",
-    "prettier-watch": "onchange 'src/**/*.{js,jsx,ts,tsx,sass,css}' -- prettier --write {{changed}}"
+    "prettier-watch": "onchange 'src/**/*.{js,jsx,ts,tsx,sass,scss,css}' -- prettier --write {{changed}}"
   },
   "devDependencies": {
     "@types/jest": "^24.0.5",
@@ -27,10 +27,14 @@
     "@types/webpack": "^4.4.24",
     "concurrently": "^4.1.0",
     "coveralls": "^3.0.2",
+    "css-loader": "^2.1.0",
     "jest": "^24.1.0",
     "live-server": "^1.2.1",
+    "node-sass": "^4.11.0",
     "onchange": "^5.2.0",
     "prettier": "^1.16.4",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
     "ts-jest": "^23.10.5",
     "ts-loader": "^5.3.3",
     "ts-node": "^8.0.2",
@@ -55,5 +59,8 @@
       "json",
       "node"
     ]
+  },
+  "dependencies": {
+    "popper.js": "^1.14.7"
   }
 }

@@ -5,14 +5,15 @@ body {
   line-height: 1.5;
   padding: 2rem;
   text-align: center;
+  background-color: whitesmoke;
 }
 
 header {
-  margin-bottom: 5rem;
+  margin-bottom: 2.5rem;
 }
 
 footer {
-  margin-top: 5rem;
+  margin-top: 2.5rem;
 }
 
 main {
