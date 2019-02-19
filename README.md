@@ -112,6 +112,7 @@ Changebar doesn't ship with any polyfills, just ES6 transpiled to ES5. You might
 - [x] Make it work
 - [ ] Tests
 - [ ] Better API with events
+- [ ] Changelog with GitHub releases
 
 ## 📝 License
 
