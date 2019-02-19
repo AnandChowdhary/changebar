@@ -7,13 +7,28 @@ import {
 export default class Changebar implements LibraryInterface {
   repo: string;
   file: string;
+  element?: HTMLElement;
   constructor({ element, repo, file }: ChangebarConstructor) {
     this.repo = repo;
     this.file = file;
     const valueElement: HTMLElement | null = document.querySelector(element);
     if (valueElement) {
-      valueElement.addEventListener("click", this.open.bind(this));
+      this.element = valueElement;
+      this.element.addEventListener("click", this.open.bind(this));
     }
+  }
+  generateCdnUrl(hash: string) {
+    return `https://cdn.staticaly.com/gh/AnandChowdhary/hovercard/${hash}/${
+      this.file
+    }`;
+  }
+  fetchFileContents(url: string) {
+    return new Promise((resolve, reject) => {
+      fetch(url)
+        .then(response => response.text())
+        .then((text: string) => resolve(text))
+        .catch(error => reject(error));
+    });
   }
   fetchGitHubHash() {
     return new Promise((resolve, reject) => {
@@ -26,8 +41,12 @@ export default class Changebar implements LibraryInterface {
   open() {
     console.log("Opening!", this);
     this.fetchGitHubHash()
-      .then(hash => console.log("Found hash", hash))
-      .catch(error => console.log("Got error", error));
+      .then(hash => this.generateCdnUrl(<string>hash))
+      .then(url => this.fetchFileContents(url))
+      .then(text => {
+        console.log("Found this text", text);
+      })
+      .catch((error: any) => console.log("Got error", error));
   }
 }
 

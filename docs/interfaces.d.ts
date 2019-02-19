@@ -1,6 +1,7 @@
 interface LibraryInterface {
     repo: string;
     file: string;
+    element?: HTMLElement;
 }
 interface ChangebarConstructor {
     element: string;
