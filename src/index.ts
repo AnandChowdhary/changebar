@@ -4,6 +4,8 @@ import {
   ChangebarConstructor
 } from "./interfaces";
 import Popper from "popper.js";
+// @ts-ignore
+import snarkdown from "snarkdown";
 import "./styles.scss";
 
 export default class Changebar implements LibraryInterface {
@@ -38,7 +40,9 @@ export default class Changebar implements LibraryInterface {
     let container: HTMLDivElement = document.createElement("div");
     container.classList.add("changebar");
     container.classList.add("changebar-visible");
-    container.innerHTML = `<div class="changebar-text">${text}</div>`;
+    container.innerHTML = `<div class="changebar-text">${snarkdown(
+      text
+    )}</div>`;
     if (!document.querySelector(".changebar")) {
       document.body.appendChild(container);
     } else {
@@ -51,9 +55,7 @@ export default class Changebar implements LibraryInterface {
     }
   }
   generateCdnUrl(hash: string) {
-    return `https://cdn.staticaly.com/gh/AnandChowdhary/hovercard/${hash}/${
-      this.file
-    }`;
+    return `https://cdn.staticaly.com/gh/${this.repo}/${hash}/${this.file}`;
   }
   fetchFileContents(url: string) {
     return new Promise((resolve, reject) => {

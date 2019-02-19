@@ -61,6 +61,7 @@
     ]
   },
   "dependencies": {
-    "popper.js": "^1.14.7"
+    "popper.js": "^1.14.7",
+    "snarkdown": "^1.2.2"
   }
 }

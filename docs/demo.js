@@ -1,1 +1,1 @@
-var changebar = new window.Changebar({ element: ".notifications-button", repo: "AnandChowdhary/hovercard", file: "README.md" });
+var changebar = new window.Changebar({ element: ".notifications-button", repo: "OswaldLabsOpenSource/changelog", file: "README.md" });
