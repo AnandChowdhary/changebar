@@ -1,0 +1,11 @@
+export declare const baseClass = "changebar";
+export declare const visibleClass = "changebar-visible";
+export declare const fetchingClass = "changebar-is-fetching";
+export declare const errorClass = "changebar-has-error";
+export declare const completedClass = "changebar-completed";
+export declare const textClass = "changebar-text";
+export declare const unreadCountClass = "changebar-unread-count";
+export declare const unreadCountDataAttribute = "data-unread-count";
+export declare const hasUnreadCountClass = "changebar-has-unread";
+export declare const hasUnreadCountVisibleClass = "changebar-unread-count-visible";
+export declare const localStorageKey = "changebar_nHeadings";

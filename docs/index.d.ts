@@ -1,4 +1,4 @@
-import { LibraryInterface, ChangebarConstructor } from "./interfaces";
+import { LibraryInterface, Constructor } from "./interfaces";
 import "./styles.scss";
 export default class Changebar implements LibraryInterface {
     repo: string;
@@ -7,8 +7,11 @@ export default class Changebar implements LibraryInterface {
     element?: HTMLElement;
     hide?: string;
     container?: HTMLDivElement;
-    constructor({ element, repo, file, heading, hide }: ChangebarConstructor);
+    totalCount?: number;
+    readCount?: number;
+    constructor({ element, repo, file, heading, hide }: Constructor);
     append(text: string): void;
+    updateCounts(): void;
     updateStore(): void;
     generateCdnUrl(hash: string): string;
     fetchFileContents(url: string): Promise<{}>;

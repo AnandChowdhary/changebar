@@ -4,13 +4,15 @@ interface LibraryInterface {
   element?: HTMLElement;
 }
 
-interface ChangebarConstructor {
+interface Constructor {
   element: string;
   repo: string;
   file: string;
   heading?: string;
   hide?: string;
   container?: HTMLDivElement;
+  totalCount?: number;
+  readCount?: number;
 }
 
 interface GitHubResponse {
@@ -19,4 +21,4 @@ interface GitHubResponse {
   commit: any;
 }
 
-export { LibraryInterface, GitHubResponse, ChangebarConstructor };
+export { LibraryInterface, GitHubResponse, Constructor };

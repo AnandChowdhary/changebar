@@ -1,12 +1,23 @@
-import {
-  LibraryInterface,
-  GitHubResponse,
-  ChangebarConstructor
-} from "./interfaces";
+import { LibraryInterface, GitHubResponse, Constructor } from "./interfaces";
 import Popper from "popper.js";
 // @ts-ignore
 import snarkdown from "snarkdown";
 import "./styles.scss";
+import {
+  unreadCountClass,
+  hasUnreadCountClass,
+  hasUnreadCountVisibleClass,
+  unreadCountDataAttribute,
+  localStorageKey,
+  visibleClass,
+  fetchingClass,
+  errorClass,
+  completedClass,
+  textClass,
+  baseClass
+} from "./constants";
+
+let popperElement: Popper;
 
 export default class Changebar implements LibraryInterface {
   repo: string;
@@ -15,7 +26,9 @@ export default class Changebar implements LibraryInterface {
   element?: HTMLElement;
   hide?: string;
   container?: HTMLDivElement;
-  constructor({ element, repo, file, heading, hide }: ChangebarConstructor) {
+  totalCount?: number;
+  readCount?: number;
+  constructor({ element, repo, file, heading, hide }: Constructor) {
     this.repo = repo;
     this.file = file;
     this.hide = hide;
@@ -24,16 +37,33 @@ export default class Changebar implements LibraryInterface {
     if (valueElement) {
       this.element = valueElement;
       this.element.addEventListener("click", this.toggle.bind(this));
+      this.element.classList.add(fetchingClass);
     }
-    this.open();
+    this.fetchGitHubHash()
+      .then(hash => this.generateCdnUrl(<string>hash))
+      .then(url => this.fetchFileContents(url))
+      .then(text => {
+        if (this.element) {
+          this.element.classList.remove(errorClass);
+          this.element.classList.add(completedClass);
+        }
+        this.append(<string>text);
+      })
+      .catch((error: any) => {
+        if (this.element) this.element.classList.add(errorClass);
+        console.log("Got error", error);
+      })
+      .then(() => this.element && this.element.classList.remove(fetchingClass));
     (<HTMLElement>document.documentElement).addEventListener(
       "click",
       (event: MouseEvent) => {
         if (
-          document.querySelector(".changebar") &&
+          document.querySelector(`.${baseClass}`) &&
           !event
             .composedPath()
-            .includes(<HTMLDivElement>document.querySelector(".changebar")) &&
+            .includes(<HTMLDivElement>(
+              document.querySelector(`.${baseClass}`)
+            )) &&
           !event.composedPath().includes(<HTMLElement>this.element) &&
           this.isOpen()
         )
@@ -43,16 +73,16 @@ export default class Changebar implements LibraryInterface {
   }
   append(text: string) {
     this.container = document.createElement("div");
-    this.container.classList.add("changebar");
-    this.container.classList.add("changebar-visible");
-    this.container.innerHTML = `<div class="changebar-text">${snarkdown(
+    this.container.classList.add(baseClass);
+    this.container.innerHTML = `<div class="${textClass}">${snarkdown(
       text
     )}</div>`;
-    if (!document.querySelector(".changebar")) {
+    if (!document.querySelector(`.${baseClass}`)) {
       document.body.appendChild(this.container);
     } else {
-      this.container = <HTMLDivElement>document.querySelector(".changebar");
+      this.container = <HTMLDivElement>document.querySelector(`.${baseClass}`);
     }
+    this.container.focus();
     if (this.hide) {
       const hideElements: NodeList = this.container.querySelectorAll(this.hide);
       for (let i = 0; i < hideElements.length; i++) {
@@ -60,27 +90,44 @@ export default class Changebar implements LibraryInterface {
       }
     }
     if (this.element) {
-      const popper = new Popper(this.element, this.container, {
+      popperElement = new Popper(this.element, this.container, {
         placement: "bottom"
       });
     }
     this.updateStore();
   }
-  updateStore() {
-    const nHeadings = (<NodeList>(
-      document.querySelectorAll(`.changebar ${this.heading}`)
+  updateCounts() {
+    this.totalCount = (<NodeList>(
+      document.querySelectorAll(`.${baseClass} ${this.heading}`)
     )).length;
-    localStorage.setItem("changebar_nHeadings", nHeadings.toString());
-    const nNotifs: HTMLElement = document.createElement("strong");
-    nNotifs.classList.add("changebar-unread");
-    nNotifs.innerHTML = nHeadings.toString();
-    if (this.element && nHeadings) {
-      if (document.querySelector(".changebar-unread")) {
-        (<HTMLElement>(
-          document.querySelector(".changebar-unread")
-        )).innerHTML = nHeadings.toString();
+    this.readCount = parseInt(localStorage.getItem(localStorageKey) || "0");
+  }
+  updateStore() {
+    this.updateCounts();
+    const unreadCount: number =
+      <number>this.totalCount - <number>this.readCount;
+    let unreadNumber: HTMLElement = document.createElement("strong");
+    if (document.querySelector(`.${unreadCountClass}`)) {
+      unreadNumber = <HTMLElement>(
+        document.querySelector(`.${unreadCountClass}`)
+      );
+      unreadNumber.innerHTML = unreadCount.toString();
+    } else if (this.element) {
+      unreadNumber.classList.add(unreadCountClass);
+      unreadNumber.innerHTML = unreadCount.toString();
+      this.element.appendChild(unreadNumber);
+    }
+    if (this.element) {
+      this.element.setAttribute(
+        unreadCountDataAttribute,
+        unreadCount.toString()
+      );
+      if (unreadCount > 0) {
+        this.element.classList.add(hasUnreadCountClass);
+        unreadNumber.classList.add(hasUnreadCountVisibleClass);
       } else {
-        this.element.appendChild(nNotifs);
+        this.element.classList.remove(hasUnreadCountClass);
+        unreadNumber.classList.remove(hasUnreadCountVisibleClass);
       }
     }
   }
@@ -105,10 +152,10 @@ export default class Changebar implements LibraryInterface {
   }
   isOpen() {
     return (
-      document.querySelector(".changebar") &&
-      (<HTMLDivElement>document.querySelector(".changebar")).classList.contains(
-        "changebar-visible"
-      )
+      document.querySelector(`.${baseClass}`) &&
+      (<HTMLDivElement>(
+        document.querySelector(`.${baseClass}`)
+      )).classList.contains(visibleClass)
     );
   }
   toggle() {
@@ -119,26 +166,20 @@ export default class Changebar implements LibraryInterface {
     }
   }
   close() {
-    if (document.querySelector(".changebar")) {
-      (<HTMLDivElement>document.querySelector(".changebar")).classList.remove(
-        "changebar-visible"
-      );
+    if (document.querySelector(`.${baseClass}`)) {
+      (<HTMLDivElement>(
+        document.querySelector(`.${baseClass}`)
+      )).classList.remove(visibleClass);
     }
   }
   open() {
-    if (!document.querySelector(".changebar")) {
-      this.fetchGitHubHash()
-        .then(hash => this.generateCdnUrl(<string>hash))
-        .then(url => this.fetchFileContents(url))
-        .then(text => {
-          this.append(<string>text);
-        })
-        .catch((error: any) => console.log("Got error", error));
-    } else {
-      (<HTMLDivElement>document.querySelector(".changebar")).classList.add(
-        "changebar-visible"
-      );
+    if (this.container && this.totalCount) {
+      this.container.classList.add(visibleClass);
+      this.container.focus();
+      popperElement.update();
+      localStorage.setItem(localStorageKey, this.totalCount.toString());
     }
+    this.updateStore();
   }
 }
 

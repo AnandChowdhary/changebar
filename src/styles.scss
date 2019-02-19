@@ -45,6 +45,10 @@ $background: #fff;
   }
 }
 
-.changebar-unread {
+.changebar-unread-count {
   margin-left: 0.5rem;
+  display: none;
+  &.changebar-unread-count-visible {
+    display: inline-block;
+  }
 }
