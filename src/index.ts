@@ -89,6 +89,44 @@ export default class Changebar implements LibraryInterface {
         (<HTMLElement>hideElements[i].parentNode).removeChild(hideElements[i]);
       }
     }
+    let firstHeadingIndex: number = Infinity;
+    const childNodes = (<Node>(
+      document.querySelector(`.${baseClass} > .${textClass}`)
+    )).childNodes;
+    const toRemove: HTMLElement[] = [];
+    const allHeadings: HTMLElement[] = Array.from(
+      document.querySelectorAll(`.${baseClass} ${this.heading}`)
+    );
+    for (let i = 0; i < childNodes.length; i++) {
+      const element = <HTMLElement>childNodes[i];
+      if (!isFinite(firstHeadingIndex)) {
+        if (allHeadings.includes(element)) firstHeadingIndex = i;
+        if (i < firstHeadingIndex) toRemove.push(element);
+      }
+    }
+    toRemove.forEach(element => {
+      if (element.nodeName === "#text") {
+        element.remove();
+      } else {
+        (<HTMLElement>element.parentNode).removeChild(element);
+      }
+    });
+    const allHeadingElements = this.container.querySelectorAll(
+      "h1, h2, h3, h4, h5, h6"
+    );
+    for (let i = 0; i < allHeadingElements.length; i++) {
+      allHeadingElements[i].classList.add(
+        "changebar-heading-" +
+          allHeadingElements[i].innerHTML
+            .toLowerCase()
+            .replace(/[^\w\s]/gi, "")
+            .replace(/[^\w ]+/g, "")
+            .replace(/ +/g, "-")
+      );
+      allHeadingElements[i].innerHTML = `<span>${
+        allHeadingElements[i].innerHTML
+      }</span>`;
+    }
     if (this.element) {
       popperElement = new Popper(this.element, this.container, {
         placement: "bottom"

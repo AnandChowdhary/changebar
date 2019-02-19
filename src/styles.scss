@@ -6,7 +6,7 @@ $background: #fff;
   width: 300px;
   text-align: left;
   margin-top: 1rem;
-  padding: 1rem;
+  padding-top: 1rem;
   box-sizing: border-box;
   border-radius: 0.2rem;
   box-shadow: 0 0.5rem 3rem rgba(0, 0, 0, 0.2);
@@ -18,12 +18,47 @@ $background: #fff;
   .changebar-text {
     height: 250px;
     overflow: auto;
-    padding: 0.5rem;
+    padding: 0 1rem;
     word-wrap: break-word;
   }
   h2 {
     font-size: inherit;
     margin: 0 0 0.5rem 0;
+  }
+  h3 {
+    font-size: 85%;
+    span {
+      background-color: #eee;
+      display: inline-block;
+      text-transform: uppercase;
+      padding: 0.1rem 0.4rem;
+      border-radius: 0.2rem;
+    }
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    margin-bottom: 0.5rem;
+    font-size: 95%;
+  }
+  * + h2 {
+    margin-top: 1rem;
+    border-top: 1px solid #ddd;
+    padding-top: 1rem;
+  }
+  h3.changebar-heading-changed span {
+    background-color: #3498db;
+    color: #fff;
+  }
+  h3.changebar-heading-added span {
+    background-color: #7bed9f;
+  }
+  h3.changebar-heading-fixed span {
+    background-color: #e74c3c;
+    color: #fff;
   }
   article {
     margin-bottom: 1rem;
