@@ -1,7 +1,7 @@
 {
   "name": "changebar",
-  "version": "0.9.0",
-  "description": "Typescript DOM library starter template",
+  "version": "1.0.0",
+  "description": "Changelog notifications widget for the web, powered by GitHub",
   "main": "docs/index.js",
   "module": "docs/index.js",
   "types": "docs/index.d.ts",
