@@ -3,8 +3,11 @@ import "./styles.scss";
 export default class Changebar implements LibraryInterface {
     repo: string;
     file: string;
+    heading: string;
     element?: HTMLElement;
-    constructor({ element, repo, file }: ChangebarConstructor);
+    hide?: string;
+    container?: HTMLDivElement;
+    constructor({ element, repo, file, heading, hide }: ChangebarConstructor);
     append(text: string): void;
     updateStore(): void;
     generateCdnUrl(hash: string): string;

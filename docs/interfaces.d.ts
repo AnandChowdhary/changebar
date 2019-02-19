@@ -7,6 +7,9 @@ interface ChangebarConstructor {
     element: string;
     repo: string;
     file: string;
+    heading?: string;
+    hide?: string;
+    container?: HTMLDivElement;
 }
 interface GitHubResponse {
     sha: string;

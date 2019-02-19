@@ -21,6 +21,15 @@ $background: #fff;
     padding: 0.5rem;
     word-wrap: break-word;
   }
+  h2 {
+    font-size: inherit;
+    margin: 0 0 0.5rem 0;
+  }
+  article {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1rem;
+  }
   &::before {
     content: "";
     position: absolute;
@@ -34,4 +43,8 @@ $background: #fff;
     z-index: 10000;
     transform: rotate(45deg);
   }
+}
+
+.changebar-unread {
+  margin-left: 0.5rem;
 }
