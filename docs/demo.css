@@ -35,3 +35,15 @@ strong {
   font-size: 300%;
   font-weight: 300;
 }
+
+.notifications-button {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 0.2rem;
+  padding: 0.5rem 1rem;
+  font: inherit;
+}
+.notifications-button span {
+  margin-right: 0.5rem;
+  display: inline-block;
+}

@@ -1,1 +1,1 @@
-var library = new window.Library("strong");
+var changebar = new window.Changebar(".notifications-button");

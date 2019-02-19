@@ -1,7 +1,7 @@
 import { LibraryInterface } from "./interfaces";
 import { random } from "./random";
 
-export default class Library implements LibraryInterface {
+export default class Changebar implements LibraryInterface {
   value: string;
   constructor(el?: string) {
     this.value = random();
@@ -13,4 +13,4 @@ export default class Library implements LibraryInterface {
   }
 }
 
-(<any>window).Library = Library;
+(<any>window).Changebar = Changebar;

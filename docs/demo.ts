@@ -1,1 +1,1 @@
-const library = new (<any> window).Library("strong");
+const changebar = new (<any> window).Changebar(".notifications-button");
